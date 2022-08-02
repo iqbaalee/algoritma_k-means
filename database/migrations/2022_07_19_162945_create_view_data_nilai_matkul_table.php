@@ -37,7 +37,7 @@ class CreateViewDataNilaiMatkulTable extends Migration
          from matkul mat where mat.angkatan = mhs.angkatan) as data_nilai
          from mahasiswa mhs
          inner join matkul m on mhs.angkatan = m.angkatan
-         group by mhs.id, mhs.nim, mhs.nama, mhs.angkatan
+         group by mhs.id, mhs.nim, mhs.nama, mhs.angkatan, mhs.isAnalyze
          order by mhs.nama asc;
         ");
     }
