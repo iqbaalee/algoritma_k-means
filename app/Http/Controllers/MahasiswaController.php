@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\mahasiswa;
 use App\Models\nilai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MahasiswaController extends Controller
 {
@@ -17,7 +18,7 @@ class MahasiswaController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $mahasiswa = mahasiswa::all();
@@ -48,14 +49,14 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
+            $data = $request->only('nim', 'nama', 'angkatan', 'alamat', 'nohp');
+            $validator = Validator::make($data, [
                 'nim' => 'required|unique:mahasiswa',
                 'nama' => 'required',
-                'angkatan' => 'required|min:2|max:4',
+                'angkatan' => 'required',
                 'alamat' => 'required',
-                'nohp' => 'required|min:11|max:13',
-            ],
-            [
+                'nohp' => 'required',
+            ],  [
                 'nim.required' => 'NIM tidak boleh kosong',
                 'nim.unique' => 'NIM sudah digunakan',
                 'nama.required' => 'Nama tidak boleh kosong',
@@ -67,6 +68,30 @@ class MahasiswaController extends Controller
                 'nohp.min' => 'Minimal 11 karakter',
                 'nohp.max' => 'Maximal 13 karakter',
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator->messages())->withInput();
+            }
+            // $request->validate(
+            //     [
+            //         'nim' => 'required|unique:mahasiswa',
+            //         'nama' => 'required',
+            //         'angkatan' => 'required|min:2|max:4',
+            //         'alamat' => 'required',
+            //         'nohp' => 'required|min:11|max:13',
+            //     ],
+            //     [
+            //         'nim.required' => 'NIM tidak boleh kosong',
+            //         'nim.unique' => 'NIM sudah digunakan',
+            //         'nama.required' => 'Nama tidak boleh kosong',
+            //         'angkatan.required' => 'Angkatan tidak boleh kosong',
+            //         'angkatan.min' => 'Minimal 2 karakter',
+            //         'angkatan.max' => 'Maximal 4 karakter',
+            //         'alamat.required' => 'Alamat tidak boleh kosong',
+            //         'nohp.required' => 'No HP tidak boleh kosong',
+            //         'nohp.min' => 'Minimal 11 karakter',
+            //         'nohp.max' => 'Maximal 13 karakter',
+            //     ]
+            // );
 
             mahasiswa::create([
                 "nim" => $request['nim'],
@@ -77,7 +102,7 @@ class MahasiswaController extends Controller
             ]);
 
             return redirect('mahasiswa')->with('success', 'Data berhasil ditambahkan');
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return $th->getMessage();
             return redirect('mahasiswa')->with('error', 'Terjadi Kesalahan');
         }
@@ -117,27 +142,29 @@ class MahasiswaController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $request->validate([
-                
-                'nama' => 'required',
-                'angkatan' => 'required|min:2|max:4',
-                'alamat' => 'required',
-                'nohp' => 'required|min:11|max:13',
-            ],
-            [
-                
-                'nama.required' => 'Nama tidak boleh kosong',
-                'angkatan.required' => 'Angkatan tidak boleh kosong',
-                'angkatan.min' => 'Minimal 2 karakter',
-                'angkatan.max' => 'Maximal 4 karakter',
-                'alamat.required' => 'Alamat tidak boleh kosong',
-                'nohp.required' => 'No HP tidak boleh kosong',
-                'nohp.min' => 'Minimal 11 karakter',
-                'nohp.max' => 'Maximal 13 karakter',
-            ]);
+            $request->validate(
+                [
+
+                    'nama' => 'required',
+                    'angkatan' => 'required|min:2|max:4',
+                    'alamat' => 'required',
+                    'nohp' => 'required|min:11|max:13',
+                ],
+                [
+
+                    'nama.required' => 'Nama tidak boleh kosong',
+                    'angkatan.required' => 'Angkatan tidak boleh kosong',
+                    'angkatan.min' => 'Minimal 2 karakter',
+                    'angkatan.max' => 'Maximal 4 karakter',
+                    'alamat.required' => 'Alamat tidak boleh kosong',
+                    'nohp.required' => 'No HP tidak boleh kosong',
+                    'nohp.min' => 'Minimal 11 karakter',
+                    'nohp.max' => 'Maximal 13 karakter',
+                ]
+            );
 
             $mahasiswa = mahasiswa::where('id', $id)->update([
-                
+
                 "nama" => $request['nama'],
                 "angkatan" => $request['angkatan'],
                 "alamat" => $request['alamat'],
@@ -145,7 +172,7 @@ class MahasiswaController extends Controller
             ]);
 
             return redirect('mahasiswa')->with('success', 'Data berhasil diubah');
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return $th->getMessage();
             return redirect('mahasiswa')->with('error', 'Terjadi Kesalahan');
         }
