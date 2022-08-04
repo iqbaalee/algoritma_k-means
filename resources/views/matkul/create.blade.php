@@ -18,7 +18,7 @@
                             <div class="form-group">
                                 <label>Kode</label>
                                 <input type="text" name="kode" class="form-control @error('kode') is-invalid @enderror"
-                                    placeholder="Kode">
+                                    placeholder="Kode" value="{{old('kode')}}">
                                 @error('kode')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label>Nama</label>
                                 <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
-                                    placeholder="Nama Mata Kuliah">
+                                    placeholder="Nama Mata Kuliah" value="{{old('nama')}}">
                                 @error('nama')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -34,14 +34,14 @@
                             <div class="form-group">
                                 <label>SKS</label>
                                 <input type="number" name="sks" class="form-control @error('sks') is-invalid @enderror"
-                                    placeholder="SKS">
+                                    placeholder="SKS" value="{{old('sks')}}">
                                 @error('sks')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label>Tahun Angkatan</label>
-                                <input type="number" name="angkatan"
+                                <input type="number" name="angkatan" value="{{old('angkatan')}}"
                                     class="form-control @error('angkatan') is-invalid @enderror" placeholder="Angkatan">
                                 @error('angkatan')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <label>Deskripsi </label>
                                 <i> ( Maksimal 150 Karakter )</i>
-                                <input type="text" name="deskripsi"
+                                <input type="text" name="deskripsi" value="{{old('deskripsi')}}"
                                     class="form-control @error('deskripsi') is-invalid @enderror"
                                     placeholder="Deskripsi dari Mata Kuliah tersebut">
                                 @error('deskripsi')

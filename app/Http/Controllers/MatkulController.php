@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\matkul;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MatkulController extends Controller
 {
@@ -53,7 +54,9 @@ class MatkulController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate(
+            $data = $request->only('kode', 'nama', 'sks', 'deskripsi', 'angkatan');
+            $validator = Validator::make(
+                $data,
                 [
                     'kode' => 'required|unique:matkul',
                     'nama' => 'required',
@@ -72,7 +75,9 @@ class MatkulController extends Controller
                     'angkatan.required' => 'Angkatan tidak boleh kosong',
                 ]
             );
-
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator->messages())->withInput();
+            }
             DB::table('matkul')->insert([
                 "kode" => $request['kode'],
                 "nama" => $request['nama'],
